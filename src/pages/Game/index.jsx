@@ -1,4 +1,3 @@
-import { func } from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { GiShinyApple, GiKiwiFruit, GiBananaBunch, GiPeach } from "react-icons/gi";
 import GeniusContext from '../../context/GeniusContext';
@@ -15,20 +14,30 @@ function Game() {
   const [fruitSelected, setFruitSelected] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState([]);
   const [playerAnswer, setPlayerAnswer] = useState([]);
+  const [clicks, setClicks] = useState(-1);
+  const [resetedState, setResetedState] = useState(false);
+  const [error, setError] = useState(false);
   
   function handleGameLogic() {
     const randomNumber = Math.floor(Math.random() * 4);
     const randomFruit = fruits[randomNumber];
 
-    setCorrectAnswer(((prevState) => [...prevState, randomFruit]));
+    if (!resetedState) {
+      setCorrectAnswer(((prevState) => [...prevState, randomFruit]));
+    } else {
+      setCorrectAnswer([randomFruit]);
+      setResetedState(false);
+    };
   }
 
   function disableStartButton() {
+    setClicks(-1);
     setButtonDisabled(true);
     handleGameLogic();
   }
   
   function handleUserInput(fruit) {
+    setClicks((prevState) => prevState + 1);
     setPlayerAnswer((prevState) => [...prevState, fruit]);
   }
 
@@ -39,8 +48,8 @@ function Game() {
     const repeat = setInterval(() => {
       if (index === count) {
         setFruitSelected('');
-        clearInterval(repeat);
         setButtonFruitsDisabled(false);
+        clearInterval(repeat);
       } else {
         setFruitSelected(correctAnswer[index]);
         index += 1;
@@ -50,18 +59,39 @@ function Game() {
       }
     }, 1000);
     setPlayerAnswer([]);
+    setClicks(-1);
+  }
+
+  function resetState() {
+    setButtonFruitsDisabled(true);
+    setButtonDisabled(false);
+    setPlayerAnswer([]);
+    setCorrectAnswer([]);
+    setError(true);
+    setTimeout(() => {
+      setError(false);
+    }, 1000)
   }
 
   useEffect(() => {
+    if (clicks !== -1 && correctAnswer[clicks] !==  playerAnswer[clicks]) {
+      resetState();
+      setResetedState(true);
+    }
+  }, [clicks])
+
+  useEffect(() => {
     if (playerAnswer.length > 0 && playerAnswer.length === correctAnswer.length) {
+      console.log('resposta alterada');
       handleGameLogic();
     }
   }, [playerAnswer])
 
   useEffect(() => {
     if (correctAnswer.length > 1) {
+      console.log(correctAnswer.length);
       teste();
-    } else if (correctAnswer.length === 1) {
+    } else if (correctAnswer.length === 1 && buttonDisabled) {
       setFruitSelected(correctAnswer[0]);
       setTimeout(() => {
         setFruitSelected('');
@@ -78,6 +108,7 @@ function Game() {
 
   return (
     <div>
+      {error && <h1>Você Errou!</h1>}
       <div className="cardContainer">
         <button
           disabled={ buttonFruitsDisabled }
