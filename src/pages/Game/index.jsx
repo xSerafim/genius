@@ -1,3 +1,4 @@
+import { func } from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { GiShinyApple, GiKiwiFruit, GiBananaBunch, GiPeach } from "react-icons/gi";
 import GeniusContext from '../../context/GeniusContext';
@@ -10,6 +11,7 @@ function Game() {
   } = useContext(GeniusContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonFruitsDisabled, setButtonFruitsDisabled] = useState(true);
   const [fruitSelected, setFruitSelected] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState([]);
   const [playerAnswer, setPlayerAnswer] = useState([]);
@@ -18,8 +20,12 @@ function Game() {
     const randomNumber = Math.floor(Math.random() * 4);
     const randomFruit = fruits[randomNumber];
 
-    setButtonDisabled(true);
     setCorrectAnswer(((prevState) => [...prevState, randomFruit]));
+  }
+
+  function disableStartButton() {
+    setButtonDisabled(true);
+    handleGameLogic();
   }
   
   function handleUserInput(fruit) {
@@ -27,12 +33,14 @@ function Game() {
   }
 
   function teste() {
+    setButtonFruitsDisabled(true);
     const count = correctAnswer.length;
     let index = 0;
     const repeat = setInterval(() => {
       if (index === count) {
         setFruitSelected('');
         clearInterval(repeat);
+        setButtonFruitsDisabled(false);
       } else {
         setFruitSelected(correctAnswer[index]);
         index += 1;
@@ -53,10 +61,11 @@ function Game() {
   useEffect(() => {
     if (correctAnswer.length > 1) {
       teste();
-    } else {
+    } else if (correctAnswer.length === 1) {
       setFruitSelected(correctAnswer[0]);
       setTimeout(() => {
         setFruitSelected('');
+        setButtonFruitsDisabled(false);
       }, 1000)
     }
   }, [correctAnswer])
@@ -71,6 +80,7 @@ function Game() {
     <div>
       <div className="cardContainer">
         <button
+          disabled={ buttonFruitsDisabled }
           className={ fruitSelected === "apple" ? "card-selected card-selected-apple" : "card" }
           onClick={() => handleUserInput("apple")}
         >
@@ -78,6 +88,7 @@ function Game() {
         </button>
 
         <button
+          disabled={ buttonFruitsDisabled }
           className={ fruitSelected === "kiwi" ? "card-selected card-selected-kiwi" : "card" }
           onClick={() => handleUserInput("kiwi")}
         >
@@ -87,12 +98,14 @@ function Game() {
 
       <div className="cardContainer">
         <button
+          disabled={ buttonFruitsDisabled }
           className={ fruitSelected === "banana" ? "card-selected card-selected-banana" : "card" }
           onClick={() => handleUserInput("banana")}
         >
           <GiBananaBunch className="icons" />
         </button>
         <button
+          disabled={ buttonFruitsDisabled }
           className={ fruitSelected === "peach" ? "card-selected card-selected-peach" : "card" }
           onClick={() => handleUserInput("peach")}
         > 
@@ -104,7 +117,7 @@ function Game() {
         <button
           disabled={ buttonDisabled }
           className="card game-start"
-          onClick={ handleGameLogic }>
+          onClick={ disableStartButton }>
           Start Game
         </button>
       </div>
