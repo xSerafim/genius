@@ -4,10 +4,9 @@
         "es2021": true
     },
     "extends": [
-        "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "airbnb"
+        "airbnb",
+        "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -22,5 +21,10 @@
         "@typescript-eslint"
     ],
     "rules": {
+      "semi": ["error", "always"],
+      "quotes": ["error", "double"],
+      "space-in-parens": ["error", "always"],
+      "arraysInObjects": true,
+      "objectsInObjects": true
     }
 }
