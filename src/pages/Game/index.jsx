@@ -7,17 +7,12 @@ function Game() {
 
   const {
     fruits,
-    // playerAnswer,
-    // setPlayerAnswer,
-    // correctAnswer,
-    // setCorrectAnswer
   } = useContext(GeniusContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [fruitSelected, setFruitSelected] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState([]);
   const [playerAnswer, setPlayerAnswer] = useState([]);
-  const [clicks, setClick] = useState(0);
   
   function handleGameLogic() {
     const randomNumber = Math.floor(Math.random() * 4);
@@ -28,9 +23,7 @@ function Game() {
   }
   
   function handleUserInput(fruit) {
-    setClick((prevState) => prevState + 1);
     setPlayerAnswer((prevState) => [...prevState, fruit]);
-    handleGameLogic();
   }
 
   function teste() {
@@ -48,21 +41,25 @@ function Game() {
         }, 500)
       }
     }, 1000);
+    setPlayerAnswer([]);
   }
 
   useEffect(() => {
-    if (correctAnswer.length > 1 && correctAnswer.length === clicks) {
+    if (playerAnswer.length > 0 && playerAnswer.length === correctAnswer.length) {
+      handleGameLogic();
+    }
+  }, [playerAnswer])
+
+  useEffect(() => {
+    if (correctAnswer.length > 1) {
       teste();
     } else {
-      setClick((prevState) => prevState + 1);
-      console.log(clicks);
-      console.log(correctAnswer.length);
       setFruitSelected(correctAnswer[0]);
       setTimeout(() => {
         setFruitSelected('');
       }, 1000)
     }
-  }, [correctAnswer, playerAnswer])
+  }, [correctAnswer])
 
   // 1 - Click start button
   // 2 - One fruit is selected
@@ -111,9 +108,6 @@ function Game() {
           Start Game
         </button>
       </div>
-      <button onClick={() => console.log(correctAnswer.every((answer, index) => answer === playerAnswer[index]))}>
-        teste
-      </button>
     </div>
   );
 }
