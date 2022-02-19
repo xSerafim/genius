@@ -1,8 +1,11 @@
 {
-  "name": "termo",
+  "homepage": "https://xserafim.github.io/genius/",
+  "name": "genius",
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -19,6 +22,7 @@
     "autoprefixer": "^10.4.2",
     "eslint": "^8.9.0",
     "eslint-plugin-react": "^7.28.0",
+    "gh-pages": "^3.2.3",
     "prettier": "2.5.1",
     "vite": "^2.8.0"
   }
