@@ -4,15 +4,18 @@ import GeniusContext from './GeniusContext';
 
 function GeniusProvider({ children }) {
   const [fruits, setFruits] = useState(['apple', 'kiwi', 'banana', 'peach']);
-  const [playerAnswer, setPlayerAnswer] = useState([]);
+  // const [playerAnswer, setPlayerAnswer] = useState([]);
+  // const [correctAnswer, setCorrectAnswer] = useState([]);
 
   const value = useMemo(() => ({
     fruits,
     setFruits,
-    playerAnswer,
-    setPlayerAnswer,
+    // playerAnswer,
+    // setPlayerAnswer,
+    // correctAnswer,
+    // setCorrectAnswer
   }), [
-    fruits, setFruits, playerAnswer, setPlayerAnswer,
+    fruits, setFruits
   ]);
 
   return (
