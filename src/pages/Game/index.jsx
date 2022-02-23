@@ -1,22 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { GiShinyApple, GiKiwiFruit, GiBananaBunch, GiPeach } from "react-icons/gi";
+import FruitsButtons from '../../components/FruitsButtons';
 import GeniusContext from '../../context/GeniusContext';
 import './style.css';
 
 function Game() {
-
-  const {
-    fruits,
-  } = useContext(GeniusContext);
+  const { fruits } = useContext(GeniusContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [buttonFruitsDisabled, setButtonFruitsDisabled] = useState(true);
-  const [fruitSelected, setFruitSelected] = useState('');
-  const [correctAnswer, setCorrectAnswer] = useState([]);
-  const [playerAnswer, setPlayerAnswer] = useState([]);
-  const [clicks, setClicks] = useState(-1);
   const [resetedState, setResetedState] = useState(false);
   const [error, setError] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState([]);
+  const [playerAnswer, setPlayerAnswer] = useState([]);
+  const [fruitSelected, setFruitSelected] = useState('');
+  const [clicks, setClicks] = useState(-1);
   
   function handleGameLogic() {
     const randomNumber = Math.floor(Math.random() * 4);
@@ -109,45 +106,15 @@ function Game() {
   return (
     <div>
       {error && <h1>Você Errou!</h1>}
-      <div className="cardContainer">
-        <button
-          disabled={ buttonFruitsDisabled }
-          className={ fruitSelected === "apple" ? "card-selected card-selected-apple" : "card" }
-          onClick={() => handleUserInput("apple")}
-        >
-          <GiShinyApple className="icons" />
-        </button>
-
-        <button
-          disabled={ buttonFruitsDisabled }
-          className={ fruitSelected === "kiwi" ? "card-selected card-selected-kiwi" : "card" }
-          onClick={() => handleUserInput("kiwi")}
-        >
-          <GiKiwiFruit className="icons" />
-        </button>
-      </div>
-
-      <div className="cardContainer">
-        <button
-          disabled={ buttonFruitsDisabled }
-          className={ fruitSelected === "banana" ? "card-selected card-selected-banana" : "card" }
-          onClick={() => handleUserInput("banana")}
-        >
-          <GiBananaBunch className="icons" />
-        </button>
-        <button
-          disabled={ buttonFruitsDisabled }
-          className={ fruitSelected === "peach" ? "card-selected card-selected-peach" : "card" }
-          onClick={() => handleUserInput("peach")}
-        > 
-          <GiPeach className="icons" />
-        </button>
-      </div>
-
+      <FruitsButtons
+          fruitSelected={ fruitSelected }
+          buttonFruitsDisabled={ buttonFruitsDisabled }
+          handleUserInput={ handleUserInput }
+      />
       <div className="cardContainer">
         <button
           disabled={ buttonDisabled }
-          className="card game-start"
+          className="game-start"
           onClick={ disableStartButton }>
           Start Game
         </button>
